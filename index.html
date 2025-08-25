@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
   <title>Aruna Pramodh - Personal Portfolio</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,7 +13,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
+    :root{
+      --maxw: 1200px;
+      --gutter: clamp(14px, 4vw, 32px);
+      --header-pad: clamp(40px, 8vw, 80px);
+      --card-pad: clamp(18px, 3vw, 30px);
+      --radius: 20px;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    img, svg, video { max-width: 100%; height: auto; display: block; }
 
     body {
       font-family: 'Orbitron', sans-serif;
@@ -20,6 +33,7 @@
       overflow-x: hidden;
     }
 
+    /* Responsive hex grid glow background */
     .hexagon-bg {
       position: fixed;
       inset: 0;
@@ -29,10 +43,10 @@
       background-image:
         linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
-      background-size: 30px 30px;
-      animation: bgPulse 5s ease-in-out infinite alternate;
+      background-size: clamp(18px, 3vw, 30px) clamp(18px, 3vw, 30px);
+      animation: bgPulse 6s ease-in-out infinite alternate;
     }
-    @keyframes bgPulse { from { opacity: 0.5; } to { opacity: 1; } }
+    @keyframes bgPulse { from { opacity: 0.55; } to { opacity: 1; } }
 
     .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
     .particle {
@@ -40,29 +54,32 @@
       background: rgba(0, 242, 255, 0.2);
       animation: float 8s ease-in-out infinite;
       box-shadow: 0 0 5px #00f2ff, 0 0 10px #00f2ff;
+      border-radius: 2px;
     }
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(0); }
       50% { transform: translateY(-30px) rotate(360deg); }
     }
 
-    .container { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    .header { text-align: center; padding: 60px 0 40px; color: #fff; }
+    .container { position: relative; z-index: 2; max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
+    .header { text-align: center; padding-block: var(--header-pad) calc(var(--header-pad) * 0.5); color: #fff; }
 
-    /* Top circular logo */
-    .logo { display: flex; justify-content: center; margin-bottom: 20px; }
+    /* Top circular logo (responsive) */
+    .logo { display: flex; justify-content: center; margin-bottom: clamp(14px, 3vw, 24px); }
     .logo-circle {
-      width: 160px; height: 160px; border-radius: 50%;
-      padding: 8px;
+      width: clamp(96px, 18vw, 160px);
+      height: clamp(96px, 18vw, 160px);
+      border-radius: 50%;
+      padding: clamp(6px, 1.2vw, 10px);
       background: linear-gradient(45deg, #00f2ff, #ff00ff);
       box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
       display: inline-flex; align-items: center; justify-content: center;
       animation: pulse 2.5s ease-in-out infinite;
     }
-    .logo-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+    .logo-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
     .logo-fallback {
       display: none; width: 100%; height: 100%; border-radius: 50%;
-      background: #151224; color: #fff; font-weight: 700; font-size: 48px;
+      background: #151224; color: #fff; font-weight: 700; font-size: clamp(28px, 6vw, 48px);
       align-items: center; justify-content: center;
     }
     @keyframes pulse {
@@ -72,7 +89,9 @@
     }
 
     .name {
-      font-size: 3.2em; font-weight: bold; margin-bottom: 10px;
+      font-size: clamp(1.8rem, 6vw, 3.2rem);
+      font-weight: bold;
+      margin-bottom: clamp(6px, 1.5vw, 10px);
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       position: relative; animation: slideInFromTop 1s ease-out;
     }
@@ -80,7 +99,8 @@
     .name::after {
       content: 'Aruna Pramodh';
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0d0a1a; overflow: hidden;
+      background: transparent; overflow: hidden;
+      pointer-events: none;
     }
     .name::before { left: 2px; text-shadow: -2px 0 #ff00ff; animation: glitch-anim-1 2s infinite linear alternate-reverse; }
     .name::after  { left: -2px; text-shadow: -2px 0 #00f2ff, 2px 2px #ff00ff; animation: glitch-anim-2 2s infinite linear alternate-reverse; }
@@ -100,38 +120,48 @@
       100% { clip: rect(52px, 9999px, 35px, 0); }
     }
 
-    .subtitle { font-size: 1.3em; opacity: 0.9; animation: slideInFromBottom 1s ease-out 0.5s both; text-shadow: 0 0 10px #00f2ff; }
+    .subtitle {
+      font-size: clamp(1rem, 2.8vw, 1.3rem);
+      opacity: 0.9; animation: slideInFromBottom 1s ease-out 0.5s both;
+      text-shadow: 0 0 10px #00f2ff;
+    }
 
     .contact-btn {
-      display: inline-flex; align-items: center; gap: 10px;
+      display: inline-flex; align-items: center; gap: clamp(8px, 1.4vw, 10px);
       background: linear-gradient(45deg, #00f2ff, #ff00ff);
-      color: #0d0a1a; padding: 15px 30px; text-decoration: none; font-weight: bold; font-size: 1.05em;
-      transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(255, 0, 255, 0.4);
+      color: #0d0a1a;
+      padding: clamp(12px, 1.8vw, 15px) clamp(20px, 3.5vw, 30px);
+      text-decoration: none; font-weight: bold; font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 5px 20px rgba(255, 0, 255, 0.4);
       clip-path: polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
-      margin-top: 22px;
+      margin-top: clamp(16px, 3vw, 22px);
     }
     .contact-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 242, 255, 0.6); }
 
     .info-cards {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px; padding: 40px 0 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+      gap: clamp(16px, 3vw, 25px);
+      padding: clamp(30px, 6vw, 60px) 0;
     }
     .card {
       background: rgba(20, 16, 40, 0.6); backdrop-filter: blur(10px);
       border: 1px solid rgba(0, 242, 255, 0.3);
-      padding: 30px; color: #fff; text-align: center; transition: all 0.3s ease;
+      padding: var(--card-pad);
+      color: #fff; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
       animation: fadeInUp 1s ease-out;
+      border-radius: clamp(12px, 2vw, var(--radius));
       clip-path: polygon(0 15px, 15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
     }
-    .card:hover { transform: translateY(-10px); box-shadow: 0 0 30px rgba(255, 0, 255, 0.6); border-color: #ff00ff; background: rgba(20, 16, 40, 0.8); }
-    .card-icon { font-size: 3em; margin-bottom: 20px; display: block; text-shadow: 0 0 15px currentColor; }
-    .card h3 { font-size: 1.5em; margin-bottom: 15px; color: #fff; text-transform: uppercase; }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 0 30px rgba(255, 0, 255, 0.6); border-color: #ff00ff; background: rgba(20, 16, 40, 0.8); }
+    .card-icon { font-size: clamp(2rem, 6vw, 3rem); margin-bottom: clamp(12px, 2.5vw, 20px); display: block; text-shadow: 0 0 15px currentColor; }
+    .card h3 { font-size: clamp(1.1rem, 2.4vw, 1.5rem); margin-bottom: clamp(8px, 1.8vw, 15px); color: #fff; text-transform: uppercase; }
     .card p {
-      font-size: 1.05em;
-      opacity: 0.9;
-      line-height: 1.6;
-      overflow-wrap: break-word;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      opacity: 0.9; line-height: 1.6; overflow-wrap: break-word;
     }
+    .card a { display: block; text-decoration: none; color: inherit; }
 
     .email-icon { color: #ff6b6b; }
     .phone-icon { color: #4ecdc4; }
@@ -147,12 +177,12 @@
     @keyframes slideInFromBottom { 0% { opacity: 0; transform: translateY(50px); } 100% { opacity: 1; transform: translateY(0); } }
     @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
 
-    @media (max-width: 768px) {
-      .name { font-size: 2.4em; }
-      .subtitle { font-size: 1.05em; }
-      .info-cards { grid-template-columns: 1fr; }
-      .header { padding: 50px 0 30px; }
-      .logo-circle { width: 130px; height: 130px; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+
+    @media (max-width: 480px) {
+      .header { padding-block: clamp(28px, 10vw, 40px) clamp(16px, 6vw, 24px); }
     }
   </style>
 </head>
@@ -180,7 +210,7 @@
 
     <div class="info-cards">
       <div class="card" style="animation-delay: 0.2s;">
-        <a href="https://mail.google.com/mail/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+        <a href="https://mail.google.com/mail/" target="_blank" rel="noopener noreferrer">
           <i class="fas fa-envelope card-icon email-icon"></i>
           <h3>Email</h3>
           <p>wickramanayakaarunapramodh@gmail.com</p>
@@ -200,7 +230,7 @@
       </div>
 
       <div class="card" style="animation-delay: 0.8s;">
-        <a href="https://web.facebook.com/pramodwickramanayaka" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+        <a href="https://web.facebook.com/pramodwickramanayaka" target="_blank" rel="noopener noreferrer">
           <i class="fab fa-facebook card-icon facebook-icon"></i>
           <h3>Facebook</h3>
           <p>Connect with me on Facebook</p>
@@ -208,7 +238,7 @@
       </div>
 
       <div class="card" style="animation-delay: 1.0s;">
-        <a href="https://www.instagram.com/pramodwickramanayaka/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+        <a href="https://www.instagram.com/pramodwickramanayaka/" target="_blank" rel="noopener noreferrer">
           <i class="fab fa-instagram card-icon instagram-icon"></i>
           <h3>Instagram</h3>
           <p>Follow me on Instagram</p>
@@ -216,7 +246,7 @@
       </div>
 
       <div class="card" style="animation-delay: 1.2s;">
-        <a href="https://github.com/pramodwickramanayaka" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+        <a href="https://github.com/pramodwickramanayaka" target="_blank" rel="noopener noreferrer">
           <i class="fab fa-github card-icon github-icon"></i>
           <h3>GitHub</h3>
           <p>Check out my code projects</p>
@@ -224,7 +254,7 @@
       </div>
 
       <div class="card" style="animation-delay: 1.4s;">
-        <a href="https://wa.me/94722472939" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+        <a href="https://wa.me/94722472939" target="_blank" rel="noopener noreferrer">
           <i class="fab fa-whatsapp card-icon whatsapp-icon"></i>
           <h3>WhatsApp</h3>
           <p>Message me directly</p>
@@ -250,11 +280,13 @@
   <script>
     function createParticles() {
       const particlesContainer = document.getElementById('particles');
-      const particleCount = 40;
+      const isMobile = window.matchMedia('(max-width: 600px)').matches;
+      const particleCount = isMobile ? 22 : 48;
+
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
-        const size = Math.random() * 4 + 2;
+        const size = Math.random() * (isMobile ? 3 : 4) + 2;
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
         particle.style.left = Math.random() * 100 + '%';
@@ -288,30 +320,32 @@
       }
     }
 
-    document.addEventListener('mousemove', (e) => {
-      const trail = document.createElement('div');
-      trail.style.position = 'fixed';
-      trail.style.left = e.clientX + 'px';
-      trail.style.top = e.clientY + 'px';
-      trail.style.width = '8px';
-      trail.style.height = '8px';
-      trail.style.background = 'rgba(255, 0, 255, 0.5)';
-      trail.style.pointerEvents = 'none';
-      trail.style.zIndex = '1000';
-      trail.style.boxShadow = '0 0 10px #ff00ff';
-      trail.style.transition = 'all 0.5s ease-out';
-      document.body.appendChild(trail);
-      setTimeout(() => {
-        trail.style.transform = 'scale(0)';
-        trail.style.opacity = '0';
-      }, 10);
-      setTimeout(() => {
-        if (trail.parentNode) trail.parentNode.removeChild(trail);
-      }, 500);
-    });
+    // Only enable cursor trail on devices with a fine pointer (e.g., mouse)
+    if (window.matchMedia('(pointer: fine)').matches) {
+      document.addEventListener('mousemove', (e) => {
+        const trail = document.createElement('div');
+        trail.style.position = 'fixed';
+        trail.style.left = e.clientX + 'px';
+        trail.style.top = e.clientY + 'px';
+        trail.style.width = '8px';
+        trail.style.height = '8px';
+        trail.style.background = 'rgba(255, 0, 255, 0.5)';
+        trail.style.pointerEvents = 'none';
+        trail.style.zIndex = '1000';
+        trail.style.boxShadow = '0 0 10px #ff00ff';
+        trail.style.transition = 'all 0.5s ease-out';
+        document.body.appendChild(trail);
+        setTimeout(() => {
+          trail.style.transform = 'scale(0)';
+          trail.style.opacity = '0';
+        }, 10);
+        setTimeout(() => {
+          if (trail.parentNode) trail.parentNode.removeChild(trail);
+        }, 500);
+      });
+    }
 
     window.addEventListener('load', createParticles);
   </script>
 </body>
 </html>
-```
