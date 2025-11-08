@@ -1,761 +1,405 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aruna Pramodh - Personal Portfolio</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Orbitron', sans-serif;
-      background: #000000;
-      color: #ffffff;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* Loading Screen */
-    .loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000000;
-      display: flex;
-      flex-direction: column; /* Changed for countdown text */
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease-out;
-    }
-
-    .loading-screen.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .robot-container {
-      perspective: 1000px;
-      width: 120px;
-      height: 150px;
-      position: relative;
-    }
-
-    .robot {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-      animation: robotFloat 3s ease-in-out infinite;
-    }
-
-    /* Robot Head */
-    .robot-head {
-      position: absolute;
-      width: 60px;
-      height: 50px;
-      background: linear-gradient(145deg, #ffffff, #cccccc);
-      border: 2px solid #ffffff;
-      border-radius: 15px;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 0 15px rgba(255,255,255,0.5);
-    }
-
-    .robot-eyes {
-      position: absolute;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-    }
-
-    .robot-eye {
-      width: 8px;
-      height: 8px;
-      background: #000000;
-      border-radius: 50%;
-      animation: robotBlink 2s ease-in-out infinite;
-    }
-
-    /* Robot Body */
-    .robot-body {
-      position: absolute;
-      width: 80px;
-      height: 70px;
-      background: linear-gradient(145deg, #ffffff, #cccccc);
-      border: 2px solid #ffffff;
-      border-radius: 12px;
-      top: 45px;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 0 15px rgba(255,255,255,0.3);
-    }
-
-    .robot-chest {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      background: #000000;
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: robotPulse 1.5s ease-in-out infinite;
-    }
-
-    .robot-chest::after {
-      content: '⚡';
-      position: absolute;
-      color: #ffffff;
-      font-size: 16px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    /* Robot Arms */
-    .robot-arm {
-      position: absolute;
-      width: 20px;
-      height: 40px;
-      background: linear-gradient(145deg, #ffffff, #cccccc);
-      border: 2px solid #ffffff;
-      border-radius: 10px;
-      top: 55px;
-      animation: robotWave 2s ease-in-out infinite alternate;
-    }
-
-    .robot-arm.left { left: -25px; transform-origin: top center; }
-    .robot-arm.right { right: -25px; transform-origin: top center; animation-delay: 1s; }
-
-    /* Robot Legs */
-    .robot-leg {
-      position: absolute;
-      width: 18px;
-      height: 35px;
-      background: linear-gradient(145deg, #ffffff, #cccccc);
-      border: 2px solid #ffffff;
-      border-radius: 8px;
-      bottom: 0;
-    }
-
-    .robot-leg.left { left: 25px; }
-    .robot-leg.right { right: 25px; }
-
-    /* Animations */
-    @keyframes robotFloat {
-      0%, 100% { transform: translateY(0) rotateY(0deg); }
-      25% { transform: translateY(-10px) rotateY(90deg); }
-      50% { transform: translateY(0) rotateY(180deg); }
-      75% { transform: translateY(-10px) rotateY(270deg); }
-    }
-
-    @keyframes robotBlink {
-      0%, 90%, 100% { height: 8px; }
-      95% { height: 2px; }
-    }
-
-    @keyframes robotPulse {
-      0%, 100% { box-shadow: 0 0 10px #ffffff; }
-      50% { box-shadow: 0 0 20px #ffffff, 0 0 30px #ffffff; }
-    }
-
-    @keyframes robotWave {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(15deg); }
-    }
-
-    .loading-text {
-      position: absolute;
-      bottom: 30%;
-      color: #ffffff;
-      font-size: 1.2em;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
-    /* New Countdown Text */
-    .countdown-text {
-      margin-top: 10px;
-      color: #ffffff;
-      font-size: 1em;
-      opacity: 0.8;
-      text-shadow: 0 0 5px rgba(255,255,255,0.5);
-    }
-    
-    /* Video Background */
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
-
-    .video-background video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.3;
-      filter: grayscale(100%) contrast(1.2);
-    }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, rgba(0,0,0,0.7), rgba(0,0,0,0.8));
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    /* Slideshow */
-    .slideshow-container {
-      position: relative;
-      max-width: 100%;
-      margin: 40px 0;
-      z-index: 2;
-    }
-
-    .slide {
-      display: none;
-      text-align: center;
-      padding: 40px 20px;
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.3);
-      margin: 20px;
-      border-radius: 10px;
-      transform-style: preserve-3d;
-      transition: all 0.8s ease;
-    }
-
-    .slide.active {
-      display: block;
-      animation: slideIn3D 0.8s ease-out;
-    }
-
-    .slide.prev {
-      animation: slideOut3D 0.8s ease-out;
-    }
-
-    @keyframes slideIn3D {
-      0% {
-        transform: perspective(1000px) rotateY(-90deg) translateX(100%);
-        opacity: 0;
-      }
-      100% {
-        transform: perspective(1000px) rotateY(0deg) translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideOut3D {
-      0% {
-        transform: perspective(1000px) rotateY(0deg) translateX(0);
-        opacity: 1;
-      }
-      100% {
-        transform: perspective(1000px) rotateY(90deg) translateX(-100%);
-        opacity: 0;
-      }
-    }
-
-    .slide h2 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      color: #ffffff;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    }
-
-    .slide p {
-      font-size: 1.2em;
-      line-height: 1.6;
-      color: #cccccc;
-    }
-
-    .slide-nav {
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .slide-btn {
-      background: #ffffff;
-      color: #000000;
-      border: none;
-      padding: 4px 8px;
-      margin: 0 6px;
-      cursor: pointer;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: bold;
-      font-size: 0.75em;
-      transition: all 0.3s ease;
-      border-radius: 4px;
-      position: relative;
-      overflow: hidden;
-    }
-    .slide-btn::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 50%;
-      transition: all 0.4s ease;
-      transform: translate(-50%, -50%);
-    }
-    .slide-btn:hover::before {
-      width: 200px;
-      height: 200px;
-    }
-    .slide-btn:hover {
-      background: #cccccc;
-      transform: translateY(-1px) scale(1.01);
-      box-shadow: 0 2px 8px rgba(255,255,255,0.3);
-    }
-
-    .container { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    .header { text-align: center; padding: 60px 0 40px; color: #fff; }
-
-    /* Top circular logo */
-    .logo { display: flex; justify-content: center; margin-bottom: 20px; }
-    .logo-circle {
-      width: 160px; height: 160px; border-radius: 50%;
-      padding: 8px;
-      background: linear-gradient(45deg, #ffffff, #cccccc);
-      box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
-      display: inline-flex; align-items: center; justify-content: center;
-      animation: pulse 2.5s ease-in-out infinite;
-    }
-    .logo-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
-    .logo-fallback {
-      display: none; width: 100%; height: 100%; border-radius: 50%;
-      background: #000000; color: #fff; font-weight: 700; font-size: 48px;
-      align-items: center; justify-content: center;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); }
-      50% { transform: scale(1.05); box-shadow: 0 0 45px rgba(255, 255, 255, 0.6); }
-      100% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); }
-    }
-
-    .name {
-      font-size: 3.2em; font-weight: bold; margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-      position: relative; animation: slideInFromTop 1s ease-out;
-      color: #ffffff;
-    }
-
-    .subtitle { 
-      font-size: 1.3em; 
-      opacity: 0.9; 
-      animation: slideInFromBottom 1s ease-out 0.5s both; 
-      text-shadow: 0 0 10px rgba(255,255,255,0.5);
-      color: #cccccc;
-    }
-
-    .contact-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: linear-gradient(45deg, #ffffff, #cccccc);
-      color: #000000; padding: 6px 12px; text-decoration: none; font-weight: bold; font-size: 0.8em;
-      transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(255, 255, 255, 0.4);
-      border-radius: 6px;
-      margin-top: 22px;
-      position: relative;
-      overflow: hidden;
-    }
-    .contact-btn::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 50%;
-      transition: all 0.6s ease;
-      transform: translate(-50%, -50%);
-    }
-    .contact-btn:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-    .contact-btn:hover { 
-      transform: translateY(-1px) scale(1.01); 
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.6);
-      background: linear-gradient(45deg, #cccccc, #ffffff);
-    }
-
-    .info-cards {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px; padding: 40px 0 60px;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 20px; color: #fff; text-align: center; transition: all 0.3s ease;
-      animation: fadeInUp 1s ease-out;
-      border-radius: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      transition: all 0.6s ease;
-      transform: translate(-50%, -50%);
-    }
-    .card:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-    .card:hover { 
-      transform: translateY(-8px) scale(1.01); 
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.6); 
-      border-color: #ffffff; 
-      background: rgba(255, 255, 255, 0.2); 
-    }
-    .card-icon { font-size: 2.2em; margin-bottom: 15px; display: block; text-shadow: 0 0 12px currentColor; }
-    .card h3 { font-size: 1.2em; margin-bottom: 10px; color: #fff; text-transform: uppercase; }
-    .card p {
-      font-size: 0.9em;
-      opacity: 0.9;
-      line-height: 1.5;
-      overflow-wrap: break-word;
-      color: #cccccc;
-    }
-
-    .email-icon { color: #ffffff; }
-    .phone-icon { color: #cccccc; }
-    .location-icon { color: #ffffff; }
-    .about-icon { color: #cccccc; }
-    .facebook-icon { color: #ffffff; }
-    .instagram-icon { color: #cccccc; }
-    .github-icon { color: #ffffff; }
-    .discord-icon { color: #cccccc; }
-    .whatsapp-icon { color: #ffffff; }
-
-    @keyframes slideInFromTop { 0% { opacity: 0; transform: translateY(-50px); } 100% { opacity: 1; transform: translateY(0); } }
-    @keyframes slideInFromBottom { 0% { opacity: 0; transform: translateY(50px); } 100% { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 768px) {
-      .name { font-size: 2.4em; }
-      .subtitle { font-size: 1.05em; }
-      .info-cards { grid-template-columns: 1fr; }
-      .header { padding: 50px 0 30px; }
-      .logo-circle { width: 130px; height: 130px; }
-    }
-
-    /* Particles for additional visual effect */
-    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
-    .particle {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.2);
-      animation: float 8s ease-in-out infinite;
-      box-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0); }
-      50% { transform: translateY(-30px) rotate(360deg); }
-    }
-  </style>
-</head>
-<body>
-  <div class="loading-screen" id="loadingScreen">
-    <div class="robot-container">
-      <div class="robot">
-        <div class="robot-head">
-          <div class="robot-eyes">
-            <div class="robot-eye"></div>
-            <div class="robot-eye"></div>
-          </div>
-        </div>
-        <div class="robot-body">
-          <div class="robot-chest"></div>
-        </div>
-        <div class="robot-arm left"></div>
-        <div class="robot-arm right"></div>
-        <div class="robot-leg left"></div>
-        <div class="robot-leg right"></div>
-      </div>
-    </div>
-    <div class="loading-text"></div>
-    <div class="countdown-text" id="countdown"></div>
-  </div>
-
-  <div class="video-background">
-    <video autoplay muted loop playsinline>
-      <source src="https://cdn.pixabay.com/vimeo/562570320/ai-artificial-intelligence-63512.mp4" type="video/mp4">
-      <source src="https://cdn.pixabay.com/vimeo/485158499/digital-brain-42110.mp4" type="video/mp4">
-      <source src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4" type="video/mp4">
-      </video>
-  </div>
-  <div class="overlay"></div>
-
-  <div class="particles" id="particles"></div>
-
-  <div class="container">
-    <div class="slideshow-container">
-      <div class="slide active">
-        <h2>Welcome</h2>
-        <p>Step into my digital universe where technology meets creativity. Explore my journey through code, innovation, and endless possibilities.</p>
-      </div>
-      <div class="slide">
-        <h2>Innovation</h2>
-        <p>Passionate about cutting-edge technology and always eager to push the boundaries of what's possible in the digital realm.</p>
-      </div>
-      <div class="slide">
-        <h2>Connect</h2>
-        <p>Let's collaborate and create something amazing together. Reach out through any of the channels below.</p>
-      </div>
-      <div class="slide-nav">
-        <button class="slide-btn" onclick="changeSlide(-1)">← Previous</button>
-        <button class="slide-btn" onclick="changeSlide(1)">Next →</button>
-      </div>
-    </div>
-
-    <header class="header">
-      <div class="logo">
-        <div class="logo-circle">
-          <img src="https://i.pinimg.com/736x/aa/31/e3/aa31e3ca2731320db1ef5e644e5fe130.jpg" alt="Logo"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="logo-fallback">AP</div>
-        </div>
-      </div>
-
-      <h1 class="name">Aruna Pramod</h1>
-      <p class="subtitle">Welcome to my digital space</p>
-
-      <a href="https://github.com/pramodwickramanayaka?tab=repositories" class="contact-btn" target="_blank" rel="noopener noreferrer">
-        <i class="fas fa-folder-open"></i> Show My Projects
-      </a>
-    </header>
-
-    <div class="info-cards">
-      <div class="card" style="animation-delay: 0.2s;">
-        <a href="https://mail.google.com/mail/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-          <i class="fas fa-envelope card-icon email-icon"></i>
-          <h3>Email</h3>
-          <p>wickramanayakaarunapramodh@gmail.com</p>
-        </a>
-      </div>
-
-      <div class="card" style="animation-delay: 0.4s;">
-        <i class="fas fa-phone card-icon phone-icon"></i>
-        <h3>Phone</h3>
-        <p>+94722472939</p>
-      </div>
-
-      <div class="card" style="animation-delay: 0.6s;">
-        <i class="fas fa-map-marker-alt card-icon location-icon"></i>
-        <h3>Location</h3>
-        <p>Galgamuwa, Sri Lanka</p>
-      </div>
-
-      <div class="card" style="animation-delay: 0.8s;">
-        <a href="https://web.facebook.com/pramodwickramanayaka" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-          <i class="fab fa-facebook card-icon facebook-icon"></i>
-          <h3>Facebook</h3>
-          <p>Connect with me on Facebook</p>
-        </a>
-      </div>
-
-      <div class="card" style="animation-delay: 1.0s;">
-        <a href="https://www.instagram.com/pramodwickramanayaka/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-          <i class="fab fa-instagram card-icon instagram-icon"></i>
-          <h3>Instagram</h3>
-          <p>Follow me on Instagram</p>
-        </a>
-      </div>
-
-      <div class="card" style="animation-delay: 1.2s;">
-        <a href="https://github.com/pramodwickramanayaka" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-          <i class="fab fa-github card-icon github-icon"></i>
-          <h3>GitHub</h3>
-          <p>Check out my code projects</p>
-        </a>
-      </div>
-
-      <div class="card" style="animation-delay: 1.4s;">
-        <a href="https://wa.me/94722472939" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-          <i class="fab fa-whatsapp card-icon whatsapp-icon"></i>
-          <h3>WhatsApp</h3>
-          <p>Message me directly</p>
-        </a>
-      </div>
-
-      <div class="card" style="animation-delay: 1.6s;">
-        <div style="cursor: pointer;" onclick="copyDiscordUsername(this)">
-          <i class="fab fa-discord card-icon discord-icon"></i>
-          <h3>Discord</h3>
-          <p>pramod_wickramanayaka<br><small>(Click to copy)</small></p>
-        </div>
-      </div>
-
-      <div class="card" style="animation-delay: 1.8s;">
-        <i class="fas fa-user-astronaut card-icon about-icon"></i>
-        <h3>About Me</h3>
-        <p>Passionate individual with a love for technology and innovation. Always eager to learn and explore new opportunities.</p>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
-    let slideInterval;
-
-    function showSlide(n) {
-      slides.forEach(slide => slide.classList.remove('active', 'prev'));
-      
-      if (n >= slides.length) currentSlide = 0;
-      if (n < 0) currentSlide = slides.length - 1;
-      
-      slides[currentSlide].classList.add('active');
-    }
-
-    function changeSlide(direction) {
-      const oldSlide = currentSlide;
-      currentSlide += direction;
-      
-      if (currentSlide >= slides.length) currentSlide = 0;
-      if (currentSlide < 0) currentSlide = slides.length - 1;
-      
-      slides[oldSlide].classList.add('prev');
-      setTimeout(() => {
-        slides[oldSlide].classList.remove('active', 'prev');
-        slides[currentSlide].classList.add('active');
-      }, 100);
-    }
-
-    function autoSlide() {
-      changeSlide(1);
-    }
-
-    function startSlideshow() {
-      slideInterval = setInterval(autoSlide, 4000);
-    }
-
-    function stopSlideshow() {
-      clearInterval(slideInterval);
-    }
-
-    // Mouse interaction with slideshow
-    document.querySelector('.slideshow-container').addEventListener('mouseenter', stopSlideshow);
-    document.querySelector('.slideshow-container').addEventListener('mouseleave', startSlideshow);
-
-    function createParticles() {
-      const particlesContainer = document.getElementById('particles');
-      const particleCount = 30;
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        const size = Math.random() * 4 + 2;
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 8 + 's';
-        particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
-        particlesContainer.appendChild(particle);
-      }
-    }
-
-    function copyDiscordUsername(element) {
-      const username = "pramod_wickramanayaka";
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(username).then(() => {
-          const p = element.querySelector('p');
-          const original = p.innerHTML;
-          p.innerHTML = "Copied!";
-          setTimeout(() => { p.innerHTML = original; }, 2000);
-        });
-      } else {
-        const ta = document.createElement('textarea');
-        ta.value = username;
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); } catch {}
-        document.body.removeChild(ta);
-        const p = element.querySelector('p');
-        const original = p.innerHTML;
-        p.innerHTML = "Copied!";
-        setTimeout(() => { p.innerHTML = original; }, 2000);
-      }
-    }
-
-    // Mouse trail effect in black and white
-    document.addEventListener('mousemove', (e) => {
-      const trail = document.createElement('div');
-      trail.style.position = 'fixed';
-      trail.style.left = e.clientX + 'px';
-      trail.style.top = e.clientY + 'px';
-      trail.style.width = '8px';
-      trail.style.height = '8px';
-      trail.style.background = 'rgba(255, 255, 255, 0.5)';
-      trail.style.pointerEvents = 'none';
-      trail.style.zIndex = '1000';
-      trail.style.boxShadow = '0 0 10px #ffffff';
-      trail.style.transition = 'all 0.5s ease-out';
-      trail.style.borderRadius = '50%';
-      document.body.appendChild(trail);
-      setTimeout(() => {
-        trail.style.transform = 'scale(0)';
-        trail.style.opacity = '0';
-      }, 10);
-      setTimeout(() => {
-        if (trail.parentNode) trail.parentNode.removeChild(trail);
-      }, 500);
-    });
-
-    // Loading screen with countdown
-    window.addEventListener('load', () => {
-      const loadingScreen = document.getElementById('loadingScreen');
-      const countdownElement = document.getElementById('countdown');
-      let countdown = 3; // Starting countdown value
-
-      countdownElement.textContent = `Launching in ${countdown}...`;
-
-      const countdownInterval = setInterval(() => {
-        countdown--;
-        if (countdown > 0) {
-          countdownElement.textContent = `Launching in ${countdown}...`;
-        } else {
-          clearInterval(countdownInterval);
-          loadingScreen.classList.add('hidden');
-          createParticles();
-          startSlideshow();
-        }
-      }, 1000); // Update every 1 second
-    });
-
-    // Fallback if video fails to load
-    document.querySelector('video').addEventListener('error', function() {
-      this.parentElement.style.background = 'linear-gradient(45deg, #000000, #333333)';
-    });
-  </script>
-</body>
-</html>
+‎<!DOCTYPE html>
+‎<html lang="en">
+‎<head>
+‎    <meta charset="UTF-8">
+‎    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+‎    <title>Mushroom Trader</title>
+‎    <style>
+‎        * {
+‎            margin: 0;
+‎            padding: 0;
+‎            box-sizing: border-box;
+‎        }
+‎
+‎        body {
+‎            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+‎            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+‎            min-height: 100vh;
+‎            padding: 20px;
+‎        }
+‎
+‎        .container {
+‎            max-width: 600px;
+‎            margin: 0 auto;
+‎            background: white;
+‎            border-radius: 20px;
+‎            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+‎            overflow: hidden;
+‎        }
+‎
+‎        .header {
+‎            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+‎            color: white;
+‎            padding: 30px 20px;
+‎            text-align: center;
+‎        }
+‎
+‎        .header h1 {
+‎            font-size: 28px;
+‎            margin-bottom: 10px;
+‎        }
+‎
+‎        .tabs {
+‎            display: flex;
+‎            background: #f5f5f5;
+‎            border-bottom: 2px solid #ddd;
+‎        }
+‎
+‎        .tab {
+‎            flex: 1;
+‎            padding: 15px;
+‎            text-align: center;
+‎            cursor: pointer;
+‎            background: #f5f5f5;
+‎            border: none;
+‎            font-size: 16px;
+‎            font-weight: bold;
+‎            color: #666;
+‎            transition: all 0.3s;
+‎        }
+‎
+‎        .tab.active {
+‎            background: white;
+‎            color: #4CAF50;
+‎            border-bottom: 3px solid #4CAF50;
+‎        }
+‎
+‎        .tab-content {
+‎            display: none;
+‎            padding: 30px 20px;
+‎        }
+‎
+‎        .tab-content.active {
+‎            display: block;
+‎        }
+‎
+‎        .date-display {
+‎            background: #e8f5e9;
+‎            padding: 15px;
+‎            border-radius: 10px;
+‎            text-align: center;
+‎            margin-bottom: 20px;
+‎            font-size: 16px;
+‎            color: #2e7d32;
+‎            font-weight: bold;
+‎        }
+‎
+‎        .summary-cards {
+‎            display: grid;
+‎            grid-template-columns: 1fr 1fr;
+‎            gap: 15px;
+‎            margin-bottom: 30px;
+‎        }
+‎
+‎        .summary-card {
+‎            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+‎            padding: 20px;
+‎            border-radius: 10px;
+‎            color: white;
+‎            text-align: center;
+‎            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+‎        }
+‎
+‎        .summary-card .label {
+‎            font-size: 12px;
+‎            opacity: 0.9;
+‎            margin-bottom: 5px;
+‎        }
+‎
+‎        .summary-card .value {
+‎            font-size: 24px;
+‎            font-weight: bold;
+‎        }
+‎
+‎        .input-group {
+‎            margin-bottom: 20px;
+‎        }
+‎
+‎        .input-group label {
+‎            display: block;
+‎            margin-bottom: 8px;
+‎            color: #333;
+‎            font-weight: bold;
+‎            font-size: 14px;
+‎        }
+‎
+‎        .input-group input {
+‎            width: 100%;
+‎            padding: 15px;
+‎            border: 2px solid #ddd;
+‎            border-radius: 10px;
+‎            font-size: 16px;
+‎            transition: border 0.3s;
+‎        }
+‎
+‎        .input-group input:focus {
+‎            outline: none;
+‎            border-color: #4CAF50;
+‎        }
+‎
+‎        .btn {
+‎            width: 100%;
+‎            padding: 15px;
+‎            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+‎            color: white;
+‎            border: none;
+‎            border-radius: 10px;
+‎            font-size: 18px;
+‎            font-weight: bold;
+‎            cursor: pointer;
+‎            transition: transform 0.2s;
+‎            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+‎        }
+‎
+‎        .btn:hover {
+‎            transform: translateY(-2px);
+‎            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+‎        }
+‎
+‎        .btn:active {
+‎            transform: translateY(0);
+‎        }
+‎
+‎        .btn-danger {
+‎            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+‎            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+‎            margin-top: 20px;
+‎        }
+‎
+‎        .history-list {
+‎            max-height: 500px;
+‎            overflow-y: auto;
+‎        }
+‎
+‎        .history-item {
+‎            background: #f9f9f9;
+‎            padding: 15px;
+‎            margin-bottom: 15px;
+‎            border-radius: 10px;
+‎            border-left: 4px solid #4CAF50;
+‎            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+‎        }
+‎
+‎        .history-item .date-time {
+‎            font-size: 12px;
+‎            color: #666;
+‎            margin-bottom: 8px;
+‎        }
+‎
+‎        .history-item .details {
+‎            display: flex;
+‎            justify-content: space-between;
+‎            align-items: center;
+‎            margin-bottom: 5px;
+‎        }
+‎
+‎        .history-item .price {
+‎            font-size: 14px;
+‎            color: #333;
+‎        }
+‎
+‎        .history-item .total {
+‎            font-size: 18px;
+‎            font-weight: bold;
+‎            color: #4CAF50;
+‎            margin-top: 5px;
+‎        }
+‎
+‎        .empty-state {
+‎            text-align: center;
+‎            padding: 40px;
+‎            color: #999;
+‎        }
+‎
+‎        .empty-state svg {
+‎            width: 80px;
+‎            height: 80px;
+‎            margin-bottom: 20px;
+‎            opacity: 0.3;
+‎        }
+‎
+‎        @media (max-width: 480px) {
+‎            .summary-cards {
+‎                grid-template-columns: 1fr;
+‎            }
+‎        }
+‎    </style>
+‎</head>
+‎<body>
+‎    <div class="container">
+‎        <div class="header">
+‎            <h1>🍄 Mushroom Trader</h1>
+‎            <p>Track Your Sales</p>
+‎        </div>
+‎
+‎        <div class="tabs">
+‎            <button class="tab active" onclick="switchTab('add')">Add Entry</button>
+‎            <button class="tab" onclick="switchTab('history')">History</button>
+‎        </div>
+‎
+‎        <!-- Add Entry Tab -->
+‎        <div id="add-tab" class="tab-content active">
+‎            <div class="date-display" id="current-date"></div>
+‎
+‎            <div class="summary-cards">
+‎                <div class="summary-card">
+‎                    <div class="label">Total Revenue</div>
+‎                    <div class="value" id="total-revenue">LKR 0.00</div>
+‎                </div>
+‎                <div class="summary-card">
+‎                    <div class="label">Total Packets</div>
+‎                    <div class="value" id="total-packets">0</div>
+‎                </div>
+‎            </div>
+‎
+‎            <div class="input-group">
+‎                <label for="price">Price per Packet (LKR)</label>
+‎                <input type="number" id="price" placeholder="e.g., 150.00" step="0.01">
+‎            </div>
+‎
+‎            <div class="input-group">
+‎                <label for="packets">Number of Packets</label>
+‎                <input type="number" id="packets" placeholder="e.g., 50">
+‎            </div>
+‎
+‎            <button class="btn" onclick="saveEntry()">SAVE ENTRY</button>
+‎        </div>
+‎
+‎        <!-- History Tab -->
+‎        <div id="history-tab" class="tab-content">
+‎            <div class="history-list" id="history-list"></div>
+‎            <button class="btn btn-danger" onclick="clearHistory()">CLEAR ALL HISTORY</button>
+‎        </div>
+‎    </div>
+‎
+‎    <script>
+‎        // Display current date
+‎        function updateDate() {
+‎            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+‎            const today = new Date().toLocaleDateString('en-US', options);
+‎            document.getElementById('current-date').textContent = today;
+‎        }
+‎
+‎        // Switch between tabs
+‎        function switchTab(tab) {
+‎            const tabs = document.querySelectorAll('.tab');
+‎            const contents = document.querySelectorAll('.tab-content');
+‎            
+‎            tabs.forEach(t => t.classList.remove('active'));
+‎            contents.forEach(c => c.classList.remove('active'));
+‎            
+‎            if (tab === 'add') {
+‎                tabs[0].classList.add('active');
+‎                document.getElementById('add-tab').classList.add('active');
+‎            } else {
+‎                tabs[1].classList.add('active');
+‎                document.getElementById('history-tab').classList.add('active');
+‎                loadHistory();
+‎            }
+‎        }
+‎
+‎        // Save entry
+‎        function saveEntry() {
+‎            const price = parseFloat(document.getElementById('price').value);
+‎            const packets = parseInt(document.getElementById('packets').value);
+‎
+‎            if (!price || !packets || price <= 0 || packets <= 0) {
+‎                alert('Please enter valid price and number of packets');
+‎                return;
+‎            }
+‎
+‎            const now = new Date();
+‎            const date = now.toISOString().split('T')[0];
+‎            const time = now.toTimeString().split(' ')[0];
+‎
+‎            const entry = {
+‎                date: date,
+‎                time: time,
+‎                price: price,
+‎                packets: packets,
+‎                total: price * packets
+‎            };
+‎
+‎            // Get existing entries
+‎            let entries = JSON.parse(localStorage.getItem('mushroomEntries') || '[]');
+‎            entries.push(entry);
+‎            localStorage.setItem('mushroomEntries', JSON.stringify(entries));
+‎
+‎            // Clear inputs
+‎            document.getElementById('price').value = '';
+‎            document.getElementById('packets').value = '';
+‎
+‎            // Update totals
+‎            updateTotals();
+‎
+‎            alert('Entry saved successfully!');
+‎        }
+‎
+‎        // Update totals
+‎        function updateTotals() {
+‎            const entries = JSON.parse(localStorage.getItem('mushroomEntries') || '[]');
+‎            
+‎            let totalRevenue = 0;
+‎            let totalPackets = 0;
+‎
+‎            entries.forEach(entry => {
+‎                totalRevenue += entry.total;
+‎                totalPackets += entry.packets;
+‎            });
+‎
+‎            document.getElementById('total-revenue').textContent = `LKR ${totalRevenue.toFixed(2)}`;
+‎            document.getElementById('total-packets').textContent = totalPackets;
+‎        }
+‎
+‎        // Load history
+‎        function loadHistory() {
+‎            const entries = JSON.parse(localStorage.getItem('mushroomEntries') || '[]');
+‎            const historyList = document.getElementById('history-list');
+‎
+‎            if (entries.length === 0) {
+‎                historyList.innerHTML = `
+‎                    <div class="empty-state">
+‎                        <svg viewBox="0 0 24 24" fill="currentColor">
+‎                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+‎                        </svg>
+‎                        <p>No entries yet</p>
+‎                        <p style="font-size: 14px; margin-top: 10px;">Add your first sale entry to get started</p>
+‎                    </div>
+‎                `;
+‎                return;
+‎            }
+‎
+‎            // Reverse to show newest first
+‎            const reversedEntries = [...entries].reverse();
+‎            
+‎            historyList.innerHTML = reversedEntries.map(entry => `
+‎                <div class="history-item">
+‎                    <div class="date-time">📅 ${entry.date} ⏰ ${entry.time}</div>
+‎                    <div class="details">
+‎                        <div class="price">Price: LKR ${entry.price.toFixed(2)}</div>
+‎                        <div class="price">Packets: ${entry.packets}</div>
+‎                    </div>
+‎                    <div class="total">Total: LKR ${entry.total.toFixed(2)}</div>
+‎                </div>
+‎            `).join('');
+‎        }
+‎
+‎        // Clear history
+‎        function clearHistory() {
+‎            if (confirm('Are you sure you want to delete all entries? This cannot be undone.')) {
+‎                localStorage.removeItem('mushroomEntries');
+‎                updateTotals();
+‎                loadHistory();
+‎                alert('History cleared successfully');
+‎            }
+‎        }
+‎
+‎        // Initialize on page load
+‎        window.onload = function() {
+‎            updateDate();
+‎            updateTotals();
+‎        };
+‎    </script>
+‎</body>
+‎</html>
+‎
