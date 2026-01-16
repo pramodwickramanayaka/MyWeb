@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile | Elite Gaming FB</title>
+    <title>K.I.T.T. Profile | Aruna Pramod</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@300;400;600&display=swap');
@@ -16,8 +16,9 @@
 
         body {
             background-color: #000000;
-            background-image: radial-gradient(circle at 0% 0%, #1877f222 0%, transparent 50%),
-                              radial-gradient(circle at 100% 100%, #1877f211 0%, transparent 50%);
+            /* බැක්ග්‍රවුන්ඩ් එක රතු පාටට හැරෙව්වා */
+            background-image: radial-gradient(circle at 0% 0%, #ff000011 0%, transparent 50%),
+                              radial-gradient(circle at 100% 100%, #ff000005 0%, transparent 50%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -31,7 +32,7 @@
             position: fixed;
             width: 100%;
             height: 100%;
-            background: #080808;
+            background: #000;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -43,15 +44,15 @@
         #percentage {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(2.5rem, 8vw, 4rem);
-            color: #1877f2;
+            color: #ff0000;
             font-weight: 900;
-            text-shadow: 0 0 20px rgba(24, 119, 242, 0.6);
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
         }
 
         .progress-container {
             width: min(200px, 60%);
             height: 3px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 0, 0, 0.1);
             margin-top: 15px;
             border-radius: 10px;
             overflow: hidden;
@@ -60,12 +61,12 @@
         .progress-bar {
             width: 0%;
             height: 100%;
-            background: #1877f2;
-            box-shadow: 0 0 15px #1877f2;
+            background: #ff0000;
+            box-shadow: 0 0 15px #ff0000;
         }
 
         .loading-text {
-            color: #1877f2;
+            color: #ff0000;
             margin-top: 15px;
             font-size: 0.6rem;
             letter-spacing: 3px;
@@ -94,11 +95,12 @@
         .container {
             position: relative;
             z-index: 10;
-            padding: 3px;
-            background: linear-gradient(135deg, #1877f2, #3a3b3c, #1877f2);
+            padding: 2px;
+            /* බෝඩර් එක රතු සහ තද අළු පාටට */
+            background: linear-gradient(135deg, #ff0000, #1a1a1a, #ff0000);
             background-size: 300% 300%;
             border-radius: 20px;
-            animation: move-border 6s ease infinite;
+            animation: move-border 4s ease infinite;
             width: 100%;
             max-width: 380px;
         }
@@ -111,12 +113,11 @@
 
         .card {
             width: 100%;
-            padding: clamp(30px, 8vw, 45px) 25px;
-            background: #1c1e21;
+            padding: 40px 25px;
+            background: #0a0a0a;
             border-radius: 18px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            overflow: hidden; /* මේක වැදගත් scanner එක එළියට නොයන්න */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
         }
 
         .imgBx {
@@ -124,9 +125,9 @@
             height: 110px;
             margin: 0 auto 15px;
             border-radius: 50%;
-            padding: 4px;
-            background: #1877f2;
-            box-shadow: 0 0 20px rgba(24, 119, 242, 0.5);
+            padding: 3px;
+            background: #ff0000;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
         }
 
         .imgBx img {
@@ -134,22 +135,23 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid #1c1e21;
+            border: 4px solid #0a0a0a;
         }
 
         h2 {
             color: #ffffff;
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(1.2rem, 5vw, 1.5rem);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         .tagline {
-            color: #1877f2;
+            color: #ff0000;
             font-family: 'Orbitron', sans-serif;
             font-size: 0.7rem;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
             display: block;
             margin-bottom: 25px;
             font-weight: 900;
@@ -157,47 +159,41 @@
 
         .info-box {
             text-align: left;
-            background: rgba(24, 119, 242, 0.05);
+            background: rgba(255, 0, 0, 0.03);
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 8px;
             margin-bottom: 25px;
-            border-left: 4px solid #1877f2;
-            min-height: 90px;
+            border-left: 3px solid #ff0000;
+            min-height: 80px;
             display: flex;
             align-items: center;
-            border: 1px solid rgba(24, 119, 242, 0.1);
+            border-right: 1px solid rgba(255, 0, 0, 0.1);
         }
 
         .typing-container {
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            width: 100%;
         }
 
         .typing-container i {
-            color: #1877f2;
+            color: #ff0000;
             font-size: 1rem;
             margin-top: 4px;
-            width: 20px;
-            flex-shrink: 0;
         }
 
         #typing-text {
-            color: #e4e6eb;
-            font-size: clamp(0.75rem, 3.5vw, 0.85rem);
-            font-weight: 400;
-            line-height: 1.5;
+            color: #ccc;
+            font-size: 0.85rem;
         }
 
         .cursor {
             display: inline-block;
-            width: 2px;
+            width: 6px;
             height: 14px;
-            background: #1877f2;
+            background: #ff0000;
             margin-left: 5px;
             animation: blink 0.7s infinite;
-            vertical-align: middle;
         }
 
         @keyframes blink {
@@ -208,9 +204,7 @@
         .social-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: clamp(8px, 3vw, 12px);
-            padding-top: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
         }
 
         .social-grid a {
@@ -218,55 +212,49 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #3a3b3c;
-            color: #e4e6eb;
+            background: #1a1a1a;
+            color: #fff;
             text-decoration: none;
-            border-radius: 50%;
-            transition: 0.3s ease;
-            font-size: clamp(0.9rem, 4vw, 1.1rem);
+            border-radius: 4px; /* Knight Rider ලුක් එකට ටිකක් Square කළා */
+            transition: 0.3s;
+            font-size: 1.1rem;
+            border: 1px solid #333;
         }
 
         .social-grid a:hover {
-            transform: translateY(-5px);
-            background: #1877f2;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(24, 119, 242, 0.6);
+            background: #ff0000;
+            box-shadow: 0 0 20px #ff0000;
+            transform: translateY(-3px);
+            border-color: #ff0000;
         }
 
-        /* --- KNIGHT RAIDER SCANNER EFFECT --- */
-        .knight-rider-scanner {
+        /* --- THE KNIGHT RAIDER SCANNER --- */
+        .scanner-bar {
             width: 100%;
-            height: 3px;
-            background: #1a0000;
+            height: 6px;
+            background: #110000;
+            margin-top: 30px;
             position: relative;
-            margin-top: 25px;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+            border: 1px solid #220000;
         }
 
-        .knight-rider-scanner::before {
-            content: '';
+        .scanner-light {
             position: absolute;
             width: 80px;
             height: 100%;
             background: linear-gradient(to right, transparent, #ff0000, #ff0000, transparent);
-            box-shadow: 0 0 15px #ff0000, 0 0 8px #ff0000;
-            animation: scanner 2s ease-in-out infinite;
+            box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
+            animation: scan 1.5s ease-in-out infinite;
         }
 
-        @keyframes scanner {
+        @keyframes scan {
             0% { left: -80px; }
             50% { left: 100%; }
             100% { left: -80px; }
         }
 
-        @media (hover: hover) {
-            .container:hover {
-                transform: scale(1.02);
-                transition: transform 0.3s ease;
-            }
-        }
     </style>
 </head>
 <body>
@@ -276,12 +264,12 @@
         <div class="progress-container">
             <div class="progress-bar" id="bar"></div>
         </div>
-        <div class="loading-text">SYSTEM INITIALIZING</div>
+        <div class="loading-text">INITIALIZING </div>
     </div>
 
     <div id="main-content">
         <div id="particles-js"></div>
-        <div class="container">
+        <div class="container" id="tilt-card">
             <div class="card">
                 <div class="imgBx">
                     <img src="https://z-p3-scontent.fcmb7-1.fna.fbcdn.net/v/t39.30808-1/607613578_857957473666752_1245957487029817215_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=106&ccb=1-7&_nc_sid=1d2534&_nc_eui2=AeHxIA_1hfgUOkI66pPfA1I2IPGbh2-K0-Ug8ZuHb4rT5fXoWRaSVWoAhgqP_djZlfsrY9K8p36HSILTlWbilBIv&_nc_ohc=BOCNsCdrQbYQ7kNvwEP74qB&_nc_oc=AdnVaWe1iUrrayCCRaB63zGPEywTn5ixMExeeRXOF0F_fjwBCueWKtD5m33VagB3LPg&_nc_zt=24&_nc_ht=z-p3-scontent.fcmb7-1.fna&_nc_gid=PPkPARAPCX0SFqHvejoduA&oh=00_AfoTZC4exfuUoiO9pKCOwfgNGAAwxkEuEidAmo04A1HYJA&oe=69703F4E" alt="Profile">
@@ -306,7 +294,9 @@
                     <a href="#"><i class="fab fa-discord"></i></a>
                 </div>
 
-                <div class="knight-rider-scanner"></div>
+                <div class="scanner-bar">
+                    <div class="scanner-light"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -319,7 +309,7 @@
         const infoIcon = document.getElementById('info-icon');
         
         const data = [
-            { text: "Went to Balalla U.B. Wanninayaka National School", icon: "fa-graduation-cap" },
+        { text: "Went to Balalla U.B. Wanninayaka National School", icon: "fa-graduation-cap" },
             { text: "Currently Living in Kurunegala", icon: "fa-house-chimney" },
             { text: "From Galgamuwa, Sri Lanka", icon: "fa-location-dot" },
             { text: "Relationship Status: Single", icon: "fa-heart" },
@@ -345,16 +335,14 @@
             infoIcon.className = `fas ${currentItem.icon}`;
 
             let speed = isDeleting ? 30 : 60;
-
             if (!isDeleting && charIndex === fullText.length) {
-                speed = 2500; 
+                speed = 2000; 
                 isDeleting = true;
             } else if (isDeleting && charIndex === 0) {
                 isDeleting = false;
                 itemIndex = (itemIndex + 1) % data.length;
                 speed = 500;
             }
-
             setTimeout(typeEffect, speed);
         }
 
@@ -364,12 +352,10 @@
             const barElement = document.getElementById('bar');
             
             const interval = setInterval(() => {
-                count += Math.floor(Math.random() * 5) + 2;
-                
+                count += Math.floor(Math.random() * 8) + 2;
                 if (count >= 100) {
                     count = 100;
                     clearInterval(interval);
-                    
                     setTimeout(() => {
                         document.getElementById('loader').style.opacity = '0';
                         setTimeout(() => {
@@ -379,34 +365,36 @@
                         }, 800);
                     }, 400);
                 }
-                
                 percentageElement.innerText = count + "%";
                 barElement.style.width = count + "%";
-            }, 60);
+            }, 50);
         }
 
         window.addEventListener('load', startLoader);
 
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#1877f2" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.2 },
-                "size": { "value": 2 },
-                "line_linked": { "enable": true, "distance": 150, "color": "#1877f2", "opacity": 0.1, "width": 1 },
-                "move": { "enable": true, "speed": 1 }
-            }
+        // PC සහ Mobile දෙකටම Tilt Effect එක (සෙන්සර් සහිතව)
+        VanillaTilt.init(document.getElementById("tilt-card"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.4,
+            gyroscope: true,
+            gyroscopeMinAngleX: -45,
+            gyroscopeMaxAngleX:  45,
+            gyroscopeMinAngleY: -45,
+            gyroscopeMaxAngleY:  45,
         });
 
-        if(window.innerWidth > 768) {
-            VanillaTilt.init(document.querySelector(".container"), {
-                max: 10,
-                speed: 400,
-                glare: true,
-                "max-glare": 0.2,
-            });
-        }
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ff0000" },
+                "opacity": { "value": 0.3 },
+                "size": { "value": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ff0000", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 2 }
+            }
+        });
     </script>
 </body>
 </html>
