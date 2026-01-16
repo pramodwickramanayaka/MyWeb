@@ -1,405 +1,384 @@
-‎<!DOCTYPE html>
-‎<html lang="en">
-‎<head>
-‎    <meta charset="UTF-8">
-‎    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-‎    <title>Mushroom Trader</title>
-‎    <style>
-‎        * {
-‎            margin: 0;
-‎            padding: 0;
-‎            box-sizing: border-box;
-‎        }
-‎
-‎        body {
-‎            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-‎            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-‎            min-height: 100vh;
-‎            padding: 20px;
-‎        }
-‎
-‎        .container {
-‎            max-width: 600px;
-‎            margin: 0 auto;
-‎            background: white;
-‎            border-radius: 20px;
-‎            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-‎            overflow: hidden;
-‎        }
-‎
-‎        .header {
-‎            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-‎            color: white;
-‎            padding: 30px 20px;
-‎            text-align: center;
-‎        }
-‎
-‎        .header h1 {
-‎            font-size: 28px;
-‎            margin-bottom: 10px;
-‎        }
-‎
-‎        .tabs {
-‎            display: flex;
-‎            background: #f5f5f5;
-‎            border-bottom: 2px solid #ddd;
-‎        }
-‎
-‎        .tab {
-‎            flex: 1;
-‎            padding: 15px;
-‎            text-align: center;
-‎            cursor: pointer;
-‎            background: #f5f5f5;
-‎            border: none;
-‎            font-size: 16px;
-‎            font-weight: bold;
-‎            color: #666;
-‎            transition: all 0.3s;
-‎        }
-‎
-‎        .tab.active {
-‎            background: white;
-‎            color: #4CAF50;
-‎            border-bottom: 3px solid #4CAF50;
-‎        }
-‎
-‎        .tab-content {
-‎            display: none;
-‎            padding: 30px 20px;
-‎        }
-‎
-‎        .tab-content.active {
-‎            display: block;
-‎        }
-‎
-‎        .date-display {
-‎            background: #e8f5e9;
-‎            padding: 15px;
-‎            border-radius: 10px;
-‎            text-align: center;
-‎            margin-bottom: 20px;
-‎            font-size: 16px;
-‎            color: #2e7d32;
-‎            font-weight: bold;
-‎        }
-‎
-‎        .summary-cards {
-‎            display: grid;
-‎            grid-template-columns: 1fr 1fr;
-‎            gap: 15px;
-‎            margin-bottom: 30px;
-‎        }
-‎
-‎        .summary-card {
-‎            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-‎            padding: 20px;
-‎            border-radius: 10px;
-‎            color: white;
-‎            text-align: center;
-‎            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-‎        }
-‎
-‎        .summary-card .label {
-‎            font-size: 12px;
-‎            opacity: 0.9;
-‎            margin-bottom: 5px;
-‎        }
-‎
-‎        .summary-card .value {
-‎            font-size: 24px;
-‎            font-weight: bold;
-‎        }
-‎
-‎        .input-group {
-‎            margin-bottom: 20px;
-‎        }
-‎
-‎        .input-group label {
-‎            display: block;
-‎            margin-bottom: 8px;
-‎            color: #333;
-‎            font-weight: bold;
-‎            font-size: 14px;
-‎        }
-‎
-‎        .input-group input {
-‎            width: 100%;
-‎            padding: 15px;
-‎            border: 2px solid #ddd;
-‎            border-radius: 10px;
-‎            font-size: 16px;
-‎            transition: border 0.3s;
-‎        }
-‎
-‎        .input-group input:focus {
-‎            outline: none;
-‎            border-color: #4CAF50;
-‎        }
-‎
-‎        .btn {
-‎            width: 100%;
-‎            padding: 15px;
-‎            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-‎            color: white;
-‎            border: none;
-‎            border-radius: 10px;
-‎            font-size: 18px;
-‎            font-weight: bold;
-‎            cursor: pointer;
-‎            transition: transform 0.2s;
-‎            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-‎        }
-‎
-‎        .btn:hover {
-‎            transform: translateY(-2px);
-‎            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-‎        }
-‎
-‎        .btn:active {
-‎            transform: translateY(0);
-‎        }
-‎
-‎        .btn-danger {
-‎            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-‎            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
-‎            margin-top: 20px;
-‎        }
-‎
-‎        .history-list {
-‎            max-height: 500px;
-‎            overflow-y: auto;
-‎        }
-‎
-‎        .history-item {
-‎            background: #f9f9f9;
-‎            padding: 15px;
-‎            margin-bottom: 15px;
-‎            border-radius: 10px;
-‎            border-left: 4px solid #4CAF50;
-‎            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-‎        }
-‎
-‎        .history-item .date-time {
-‎            font-size: 12px;
-‎            color: #666;
-‎            margin-bottom: 8px;
-‎        }
-‎
-‎        .history-item .details {
-‎            display: flex;
-‎            justify-content: space-between;
-‎            align-items: center;
-‎            margin-bottom: 5px;
-‎        }
-‎
-‎        .history-item .price {
-‎            font-size: 14px;
-‎            color: #333;
-‎        }
-‎
-‎        .history-item .total {
-‎            font-size: 18px;
-‎            font-weight: bold;
-‎            color: #4CAF50;
-‎            margin-top: 5px;
-‎        }
-‎
-‎        .empty-state {
-‎            text-align: center;
-‎            padding: 40px;
-‎            color: #999;
-‎        }
-‎
-‎        .empty-state svg {
-‎            width: 80px;
-‎            height: 80px;
-‎            margin-bottom: 20px;
-‎            opacity: 0.3;
-‎        }
-‎
-‎        @media (max-width: 480px) {
-‎            .summary-cards {
-‎                grid-template-columns: 1fr;
-‎            }
-‎        }
-‎    </style>
-‎</head>
-‎<body>
-‎    <div class="container">
-‎        <div class="header">
-‎            <h1>🍄 Mushroom Trader</h1>
-‎            <p>Track Your Sales</p>
-‎        </div>
-‎
-‎        <div class="tabs">
-‎            <button class="tab active" onclick="switchTab('add')">Add Entry</button>
-‎            <button class="tab" onclick="switchTab('history')">History</button>
-‎        </div>
-‎
-‎        <!-- Add Entry Tab -->
-‎        <div id="add-tab" class="tab-content active">
-‎            <div class="date-display" id="current-date"></div>
-‎
-‎            <div class="summary-cards">
-‎                <div class="summary-card">
-‎                    <div class="label">Total Revenue</div>
-‎                    <div class="value" id="total-revenue">LKR 0.00</div>
-‎                </div>
-‎                <div class="summary-card">
-‎                    <div class="label">Total Packets</div>
-‎                    <div class="value" id="total-packets">0</div>
-‎                </div>
-‎            </div>
-‎
-‎            <div class="input-group">
-‎                <label for="price">Price per Packet (LKR)</label>
-‎                <input type="number" id="price" placeholder="e.g., 150.00" step="0.01">
-‎            </div>
-‎
-‎            <div class="input-group">
-‎                <label for="packets">Number of Packets</label>
-‎                <input type="number" id="packets" placeholder="e.g., 50">
-‎            </div>
-‎
-‎            <button class="btn" onclick="saveEntry()">SAVE ENTRY</button>
-‎        </div>
-‎
-‎        <!-- History Tab -->
-‎        <div id="history-tab" class="tab-content">
-‎            <div class="history-list" id="history-list"></div>
-‎            <button class="btn btn-danger" onclick="clearHistory()">CLEAR ALL HISTORY</button>
-‎        </div>
-‎    </div>
-‎
-‎    <script>
-‎        // Display current date
-‎        function updateDate() {
-‎            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-‎            const today = new Date().toLocaleDateString('en-US', options);
-‎            document.getElementById('current-date').textContent = today;
-‎        }
-‎
-‎        // Switch between tabs
-‎        function switchTab(tab) {
-‎            const tabs = document.querySelectorAll('.tab');
-‎            const contents = document.querySelectorAll('.tab-content');
-‎            
-‎            tabs.forEach(t => t.classList.remove('active'));
-‎            contents.forEach(c => c.classList.remove('active'));
-‎            
-‎            if (tab === 'add') {
-‎                tabs[0].classList.add('active');
-‎                document.getElementById('add-tab').classList.add('active');
-‎            } else {
-‎                tabs[1].classList.add('active');
-‎                document.getElementById('history-tab').classList.add('active');
-‎                loadHistory();
-‎            }
-‎        }
-‎
-‎        // Save entry
-‎        function saveEntry() {
-‎            const price = parseFloat(document.getElementById('price').value);
-‎            const packets = parseInt(document.getElementById('packets').value);
-‎
-‎            if (!price || !packets || price <= 0 || packets <= 0) {
-‎                alert('Please enter valid price and number of packets');
-‎                return;
-‎            }
-‎
-‎            const now = new Date();
-‎            const date = now.toISOString().split('T')[0];
-‎            const time = now.toTimeString().split(' ')[0];
-‎
-‎            const entry = {
-‎                date: date,
-‎                time: time,
-‎                price: price,
-‎                packets: packets,
-‎                total: price * packets
-‎            };
-‎
-‎            // Get existing entries
-‎            let entries = JSON.parse(localStorage.getItem('mushroomEntries') || '[]');
-‎            entries.push(entry);
-‎            localStorage.setItem('mushroomEntries', JSON.stringify(entries));
-‎
-‎            // Clear inputs
-‎            document.getElementById('price').value = '';
-‎            document.getElementById('packets').value = '';
-‎
-‎            // Update totals
-‎            updateTotals();
-‎
-‎            alert('Entry saved successfully!');
-‎        }
-‎
-‎        // Update totals
-‎        function updateTotals() {
-‎            const entries = JSON.parse(localStorage.getItem('mushroomEntries') || '[]');
-‎            
-‎            let totalRevenue = 0;
-‎            let totalPackets = 0;
-‎
-‎            entries.forEach(entry => {
-‎                totalRevenue += entry.total;
-‎                totalPackets += entry.packets;
-‎            });
-‎
-‎            document.getElementById('total-revenue').textContent = `LKR ${totalRevenue.toFixed(2)}`;
-‎            document.getElementById('total-packets').textContent = totalPackets;
-‎        }
-‎
-‎        // Load history
-‎        function loadHistory() {
-‎            const entries = JSON.parse(localStorage.getItem('mushroomEntries') || '[]');
-‎            const historyList = document.getElementById('history-list');
-‎
-‎            if (entries.length === 0) {
-‎                historyList.innerHTML = `
-‎                    <div class="empty-state">
-‎                        <svg viewBox="0 0 24 24" fill="currentColor">
-‎                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-‎                        </svg>
-‎                        <p>No entries yet</p>
-‎                        <p style="font-size: 14px; margin-top: 10px;">Add your first sale entry to get started</p>
-‎                    </div>
-‎                `;
-‎                return;
-‎            }
-‎
-‎            // Reverse to show newest first
-‎            const reversedEntries = [...entries].reverse();
-‎            
-‎            historyList.innerHTML = reversedEntries.map(entry => `
-‎                <div class="history-item">
-‎                    <div class="date-time">📅 ${entry.date} ⏰ ${entry.time}</div>
-‎                    <div class="details">
-‎                        <div class="price">Price: LKR ${entry.price.toFixed(2)}</div>
-‎                        <div class="price">Packets: ${entry.packets}</div>
-‎                    </div>
-‎                    <div class="total">Total: LKR ${entry.total.toFixed(2)}</div>
-‎                </div>
-‎            `).join('');
-‎        }
-‎
-‎        // Clear history
-‎        function clearHistory() {
-‎            if (confirm('Are you sure you want to delete all entries? This cannot be undone.')) {
-‎                localStorage.removeItem('mushroomEntries');
-‎                updateTotals();
-‎                loadHistory();
-‎                alert('History cleared successfully');
-‎            }
-‎        }
-‎
-‎        // Initialize on page load
-‎        window.onload = function() {
-‎            updateDate();
-‎            updateTotals();
-‎        };
-‎    </script>
-‎</body>
-‎</html>
-‎
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | Elite Gaming FB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            background-image: radial-gradient(circle at 0% 0%, #1877f222 0%, transparent 50%),
+                              radial-gradient(circle at 100% 100%, #1877f211 0%, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* --- LOADING SCREEN --- */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #080808;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease;
+        }
+
+        #percentage {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            color: #1877f2;
+            font-weight: 900;
+            text-shadow: 0 0 20px rgba(24, 119, 242, 0.6);
+        }
+
+        .progress-container {
+            width: min(200px, 60%);
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #1877f2;
+            box-shadow: 0 0 15px #1877f2;
+        }
+
+        .loading-text {
+            color: #1877f2;
+            margin-top: 15px;
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* --- MAIN CONTENT --- */
+        #main-content {
+            opacity: 0;
+            transition: opacity 1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            padding: 3px;
+            background: linear-gradient(135deg, #1877f2, #3a3b3c, #1877f2);
+            background-size: 300% 300%;
+            border-radius: 20px;
+            animation: move-border 6s ease infinite;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        @keyframes move-border {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .card {
+            width: 100%;
+            padding: clamp(30px, 8vw, 45px) 25px;
+            background: #1c1e21;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .imgBx {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            padding: 4px;
+            background: #1877f2;
+            box-shadow: 0 0 20px rgba(24, 119, 242, 0.5);
+        }
+
+        .imgBx img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #1c1e21;
+        }
+
+        h2 {
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            color: #1877f2;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 25px;
+            font-weight: 900;
+        }
+
+        /* --- TYPING BOX (Responsive) --- */
+        .info-box {
+            text-align: left;
+            background: rgba(24, 119, 242, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #1877f2;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(24, 119, 242, 0.1);
+        }
+
+        .typing-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .typing-container i {
+            color: #1877f2;
+            font-size: 1rem;
+            margin-top: 4px;
+            width: 20px;
+            flex-shrink: 0;
+        }
+
+        #typing-text {
+            color: #e4e6eb;
+            font-size: clamp(0.75rem, 3.5vw, 0.85rem);
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 14px;
+            background: #1877f2;
+            margin-left: 5px;
+            animation: blink 0.7s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* --- SOCIAL GRID --- */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: clamp(8px, 3vw, 12px);
+            padding-top: 10px;
+        }
+
+        .social-grid a {
+            aspect-ratio: 1/1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #3a3b3c;
+            color: #e4e6eb;
+            text-decoration: none;
+            border-radius: 50%;
+            transition: 0.3s ease;
+            font-size: clamp(0.9rem, 4vw, 1.1rem);
+        }
+
+        .social-grid a:hover {
+            transform: translateY(-5px);
+            background: #1877f2;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(24, 119, 242, 0.6);
+        }
+
+        /* PC වලට විතරක් Tilt effect එක වැඩ කරන්න */
+        @media (hover: hover) {
+            .container:hover {
+                transform: scale(1.02);
+                transition: transform 0.3s ease;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div id="percentage">0%</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="bar"></div>
+        </div>
+        <div class="loading-text">SYSTEM INITIALIZING</div>
+    </div>
+
+    <div id="main-content">
+        <div id="particles-js"></div>
+        <div class="container" data-tilt data-tilt-max="10" data-tilt-glare="true">
+            <div class="card">
+                <div class="imgBx">
+                    <img src="https://z-p3-scontent.fcmb7-1.fna.fbcdn.net/v/t39.30808-1/607613578_857957473666752_1245957487029817215_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=106&ccb=1-7&_nc_sid=1d2534&_nc_eui2=AeHxIA_1hfgUOkI66pPfA1I2IPGbh2-K0-Ug8ZuHb4rT5fXoWRaSVWoAhgqP_djZlfsrY9K8p36HSILTlWbilBIv&_nc_ohc=BOCNsCdrQbYQ7kNvwEP74qB&_nc_oc=AdnVaWe1iUrrayCCRaB63zGPEywTn5ixMExeeRXOF0F_fjwBCueWKtD5m33VagB3LPg&_nc_zt=24&_nc_ht=z-p3-scontent.fcmb7-1.fna&_nc_gid=PPkPARAPCX0SFqHvejoduA&oh=00_AfoTZC4exfuUoiO9pKCOwfgNGAAwxkEuEidAmo04A1HYJA&oe=69703F4E" alt="Profile">
+                </div>
+                <h2>ARUNA PRAMOD</h2>
+                <span class="tagline">SINCE | 2022</span>
+                
+                <div class="info-box">
+                    <div class="typing-container">
+                        <i id="info-icon" class="fas fa-graduation-cap"></i>
+                        <div>
+                            <span id="typing-text"></span><span class="cursor"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-grid">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/94722472939" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    
+    <script>
+        const typingText = document.getElementById('typing-text');
+        const infoIcon = document.getElementById('info-icon');
+        
+        const data = [
+            { text: "Went to Balalla U.B. Wanninayaka National School", icon: "fa-graduation-cap" },
+            { text: "Currently Living in Kurunegala", icon: "fa-house-chimney" },
+            { text: "From Galgamuwa, Sri Lanka", icon: "fa-location-dot" },
+            { text: "Relationship Status: Single", icon: "fa-heart" },
+            { text: "Call Me: 072 247 2939", icon: "fa-phone" }
+        ];
+
+        let itemIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeEffect() {
+            const currentItem = data[itemIndex];
+            const fullText = currentItem.text;
+
+            if (isDeleting) {
+                typingText.innerHTML = fullText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingText.innerHTML = fullText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            infoIcon.className = `fas ${currentItem.icon}`;
+
+            let speed = isDeleting ? 30 : 60;
+
+            if (!isDeleting && charIndex === fullText.length) {
+                speed = 2500; // Pause at end
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                itemIndex = (itemIndex + 1) % data.length;
+                speed = 500;
+            }
+
+            setTimeout(typeEffect, speed);
+        }
+
+        function startLoader() {
+            let count = 0;
+            const percentageElement = document.getElementById('percentage');
+            const barElement = document.getElementById('bar');
+            
+            const interval = setInterval(() => {
+                count += Math.floor(Math.random() * 5) + 2;
+                
+                if (count >= 100) {
+                    count = 100;
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        document.getElementById('loader').style.opacity = '0';
+                        setTimeout(() => {
+                            document.getElementById('loader').style.display = 'none';
+                            document.getElementById('main-content').style.opacity = '1';
+                            typeEffect(); 
+                        }, 800);
+                    }, 400);
+                }
+                
+                percentageElement.innerText = count + "%";
+                barElement.style.width = count + "%";
+            }, 60);
+        }
+
+        window.addEventListener('load', startLoader);
+
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#1877f2" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.2 },
+                "size": { "value": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#1877f2", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1 }
+            }
+        });
+
+        // Mobile වල tilt effect එක disable කරන්න (smooth වෙන්න)
+        if(window.innerWidth > 768) {
+            VanillaTilt.init(document.querySelector(".container"), {
+                max: 10,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.2,
+            });
+        }
+    </script>
+</body>
+</html>
